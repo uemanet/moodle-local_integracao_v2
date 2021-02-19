@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="local/integracao_v2/db" VERSION="2020290400" COMMENT="XMLDB file for Integração Web Services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="int_v2_class" COMMENT="Integracao turmas/cursos" NEXT="int_v2_discipline_course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="trm_id"/>
+        <FIELD NAME="trm_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" COMMENT="ID da turma no harpia. acd_turmas"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_v2_turmas"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="int_v2_discipline_course" COMMENT="Integracao disciplinas/cursos" NEXT="int_v2_groups" PREVIOUS="int_v2_class">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="ofd_id"/>
+        <FIELD NAME="ofd_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="course" COMMENT="ID da disciplina oferecida no gestor"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="ofd_id" NEXT="pes_id" COMMENT="ID do curso no moodle."/>
+        <FIELD NAME="pes_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="course" NEXT="trm_id" COMMENT="ID da pessoa vinculado ao professor da disciplina no gestor"/>
+        <FIELD NAME="trm_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="pes_id" COMMENT="ID da turma no harpia"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_v2_discipline_course"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="int_v2_groups" COMMENT="Integracao do mapeamento entre grupos e turmas do harpia" NEXT="int_v2_groups_course" PREVIOUS="int_v2_discipline_course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="ofd_id"/>
+        <FIELD NAME="trm_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="grp_id" COMMENT="ID de turma no harpia."/>
+        <FIELD NAME="grp_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="trm_id" NEXT="name" COMMENT="ID do grupo no harpia."/>
+        <FIELD NAME="name" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="grp_id" NEXT="description" COMMENT="Nome do grupo"/>
+        <FIELD NAME="description" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="name" COMMENT="Descrição do grupo"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_v2_discipline_course"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="int_v2_groups_course" COMMENT="Integracao entre grupos do harpia e o id das disciplinas" NEXT="int_v2_tutor_group" PREVIOUS="int_v2_groups">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="ofd_id"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="grp_id" COMMENT="ID do curso no moodle."/>
+        <FIELD NAME="grp_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="course" NEXT="group" COMMENT="ID do grupo no harpia. "/>
+        <FIELD NAME="group_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="grp_id" NEXT="per_id" COMMENT="ID do grupo no moodle"/>
+        <FIELD NAME="per_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="group_id" COMMENT="ID do período letivo que o grupo está sendo no moodle"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_v2_discipline_course"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="int_v2_tutor_group" COMMENT="Tabela de tutores dos grupos" NEXT="int_v2_student_course" PREVIOUS="int_v2_groups_course">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="grp_id"/>
+        <FIELD NAME="grp_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="courseid" COMMENT="ID do grupo no harpia. acd_grupos"/>
+        <FIELD NAME="pes_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="groupid" NEXT="userid" COMMENT="ID da pessoa no harpia. gra_pessoas"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="pes_id" NEXT="ttg_tipo_tutoria" COMMENT="ID do usuario no moodle. mdl_user"/>
+        <FIELD NAME="ttg_tipo_tutoria" TYPE="char" LENGTH="100" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="userid" COMMENT="Tipo de tutoria do tutor"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_v2_tutor_group"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="int_v2_student_class" COMMENT="Tabela de matricula de alunos no curso" NEXT="int_v2_student_discipline" PREVIOUS="int_v2_tutor_group">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="mat_id"/>
+        <FIELD NAME="mat_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="userid" COMMENT="ID da matrícula no harpia"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="mat_id" NEXT="pes_id" COMMENT="ID do usuario no moodle. mdl_user"/>
+        <FIELD NAME="pes_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="trm_id" COMMENT="ID da pessoa no harpia. gra_pessoas"/>
+        <FIELD NAME="trm_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="pes_id" NEXT="courseid" COMMENT="ID da turma no harpia. gra_turmas"/>
+        <FIELD NAME="grp_id" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="courseid" NEXT="groupid" COMMENT="ID do grupo no harpia. gra_grupos"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_student_course"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="int_v2_student_discipline" COMMENT="Tabela de matricula de alunos na disciplina" PREVIOUS="int_v2_student_class">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="true" ENUM="false" NEXT="mat_id"/>
+        <FIELD NAME="mat_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="id" NEXT="userid" COMMENT="ID da matrícula no harpia"/>
+        <FIELD NAME="userid" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="mat_id" NEXT="pes_id" COMMENT="ID do usuario no moodle. mdl_user"/>
+        <FIELD NAME="pes_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="userid" NEXT="trm_id" COMMENT="ID da pessoa no harpia. gra_pessoas"/>
+        <FIELD NAME="trm_id" TYPE="int" LENGTH="10" NOTNULL="true" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="pes_id" NEXT="grp_id" COMMENT="ID da turma no harpia. gra_turmas"/>
+        <FIELD NAME="grp_id" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="trm_id" NEXT="mof_id" COMMENT="ID do grupo no harpia. gra_grupos"/>
+        <FIELD NAME="mof_id" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="grp_id" NEXT="course" COMMENT="ID da matrícula em oferta de disciplina no harpia. acd_matriculas_ofertas_disciplinas"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="false" UNSIGNED="true" SEQUENCE="false" ENUM="false" PREVIOUS="mof_id" COMMENT="ID da matrícula em oferta de disciplina no harpia. acd_matriculas_ofertas_disciplinas"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for int_student_course"/>
+      </KEYS>
+    </TABLE>
+  </TABLES>
+</XMLDB>
