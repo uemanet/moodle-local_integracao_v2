@@ -157,6 +157,13 @@ $functions = array(
         'description' => 'Return final grade of a list of students',
         'type' => 'read'
     ),
+    'local_integracao_v2_get_course_grades_batch' => array(
+        'classname' => 'local_wsintegracao_v2_grade',
+        'methodname' => 'get_course_grades_batch',
+        'classpath' => 'local/integracao_v2/classes/grade.php',
+        'description' => 'Return course final grade of a list of students',
+        'type' => 'read'
+    ),
     'local_integracao_v2_delete_discipline' => array(
         'classname' => 'local_wsintegracao_v2_discipline',
         'methodname' => 'remove_discipline',
@@ -203,6 +210,7 @@ $services = array(
             'local_integracao_v2_delete_discipline',
             'local_integracao_v2_unenrol_tutor_group',
             'local_integracao_v2_get_grades_batch',
+            'local_integracao_v2_get_course_grades_batch',
             'local_integracao_v2_update_user',
             'local_integracao_v2_ping'
         ),

@@ -33,8 +33,6 @@ class local_wsintegracao_v2_grade extends wsintegracao_v2_base {
      * @throws moodle_exception
      */
     public static function get_grades_batch($grades) {
-        global $DB;
-
         // Validate parameters.
         self::validate_parameters(self::get_grades_batch_parameters(), array('grades' => $grades));
 
@@ -106,6 +104,56 @@ class local_wsintegracao_v2_grade extends wsintegracao_v2_base {
         );
     }
 
+    public static function get_course_grades_batch_parameters() {
+        return new external_function_parameters([
+            'grades' => new external_single_structure([
+                'ofd_id' => new external_value(PARAM_INT, 'Id da oferta de disciplina no harpia'),
+                'pes_ids' => new external_value(PARAM_TEXT, "Array com os pes_id's dos alunos do harpia")
+            ])
+        ]);
+    }
+
+    public static function get_course_grades_batch($grades) {
+        global $DB;
+
+        // Validate parameters.
+        self::validate_parameters(self::get_course_grades_batch_parameters(), ['grades' => $grades]);
+
+        $discipline = $DB->get_record('int_v2_discipline_course', ['ofd_id' => $grades['ofd_id']], '*', MUST_EXIST);
+
+        $pes_ids = json_decode($grades['pes_ids'], true);
+        if (empty($pes_ids)) {
+            throw new Exception('Parameter pes_ids can not be null.');
+        }
+
+        $studentsgrades = [];
+        foreach ($pes_ids as $pes_id) {
+            $userid = self::get_user_by_pes_id($pes_id);
+
+            $grade = self::get_student_course_grade($userid, $discipline->course);
+
+            $studentsgrades[] = [
+                'pes_id' => $pes_id,
+                'grade' => $grade
+            ];
+        }
+
+        return [
+            'grades' => $studentsgrades
+        ];
+    }
+
+    public static function get_course_grades_batch_returns() {
+        return new external_function_parameters([
+            'grades' => new external_multiple_structure(
+                new external_single_structure([
+                    'pes_id' => new external_value(PARAM_INT, 'Id da pessoa no acadêmico'),
+                    'grade' => new external_value(PARAM_TEXT, 'Nota final do aluno no curso do Moodle')
+                ])
+            )
+        ]);
+    }
+
     /**
      * @param $itemid
      * @param $userid
@@ -124,6 +172,46 @@ class local_wsintegracao_v2_grade extends wsintegracao_v2_base {
                 AND itemid = :itemid";
 
         $grade = $DB->get_record_sql($sql, array('userid' => $userid, 'itemid' => $itemid));
+
+        // Retorna 0 caso não seja encontrados registros.
+        if (!$grade) {
+            return 0;
+        }
+
+        if ($grade->scaleid) {
+            return self::get_grade_by_scale($grade->scaleid, $grade->finalgrade);
+        }
+
+        // Formata a nota final.
+        if ($grade->finalgrade) {
+            $finalgrade = number_format($grade->finalgrade, 2);
+        }
+
+        if ($grade->rawgrademax > 10 && $grade->finalgrade > 1) {
+            $finalgrade = ($grade->finalgrade - 1) / $grade->rawgrademax;
+            $finalgrade = number_format($finalgrade, 2);
+        }
+
+        return $finalgrade;
+    }
+
+    /**
+     * @param $userid
+     * @param $courseid
+     * @return float|int|mixed|string
+     * @throws dml_exception
+     */
+    public static function get_student_course_grade($userid, $courseid) {
+        global $DB;
+
+        $finalgrade = 0;
+
+        $sql = "SELECT gg.*, gi.scaleid
+                FROM {grade_grades} gg
+                INNER JOIN {grade_items} gi ON gi.id = gg.itemid
+                WHERE gg.userid = :userid AND gi.courseid = :courseid AND gi.itemtype = 'course'";
+
+        $grade = $DB->get_record_sql($sql, ['userid' => $userid, 'courseid' => $courseid]);
 
         // Retorna 0 caso não seja encontrados registros.
         if (!$grade) {

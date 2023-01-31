@@ -25,9 +25,9 @@
 
 defined('MOODLE_INTERNAL') || die();
 
-function xmldb_local_integracao_v2_install()
-{
+function xmldb_local_integracao_v2_install() {
     global $DB, $CFG;
+
     require_once($CFG->libdir . '/db/upgradelib.php');
 
     $dbman = $DB->get_manager();
@@ -44,5 +44,6 @@ function xmldb_local_integracao_v2_install()
         $dbman->create_table($table);
 
     }
+
     return true;
 }

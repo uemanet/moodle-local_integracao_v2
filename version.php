@@ -22,8 +22,8 @@ defined('MOODLE_INTERNAL') || die();
  * @license http://www.gnu.org/copyleft/gpl.html GNU GPL v3 or later
  */
 
-$plugin->version = 2020290435;
+$plugin->version = 2023013100;
 $plugin->requires = 2013062000;
-$plugin->release = '0.1.1';
+$plugin->release = '1.0.0';
 $plugin->maturity = MATURITY_STABLE;
 $plugin->component = 'local_integracao_v2';
