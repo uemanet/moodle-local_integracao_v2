@@ -35,7 +35,7 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
      */
     public static function enrol_student($student)
     {
-        global $CFG, $DB;
+        global $DB;
 
         self::validate_parameters(self::enrol_student_parameters(), array('student' => $student));
 
@@ -65,7 +65,7 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
                 $data['pes_id'] = $student->pes_id;
                 $data['userid'] = $userid;
 
-                $res = $DB->insert_record('int_pessoa_user', $data);
+                $DB->insert_record('int_pessoa_user', $data);
             }
 
             $data['mat_id'] = $student->mat_id;
@@ -75,6 +75,16 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
             $data['grp_id'] = $student->grp_id;
 
             $res = $DB->insert_record('int_v2_student_class', $data);
+
+            if (isset($student->itt_id)) {
+                $cohort = $DB->get_record('cohort', ['idnumber' => $student->itt_id]);
+
+                if (!$cohort) {
+                    throw new \Exception("Não existe um cohort com idnumber criado para esta instituicao de id: " . $student->itt_id);
+                }
+
+                cohort_add_member($cohort->id, $userid);
+            }
 
             $returndata['id'] = $res;
             $returndata['status'] = 'success';
@@ -102,8 +112,9 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
                     array(
                         'mat_id' => new external_value(PARAM_INT, 'Id da matricula do aluno no harpia'),
                         'trm_id' => new external_value(PARAM_INT, 'Id da turma do aluno no harpia'),
-                        'grp_id' => new external_value(PARAM_INT, 'Id do grupo no gestor', VALUE_DEFAULT, null),
-                        'pes_id' => new external_value(PARAM_INT, 'Id da pessoa no gestor'),
+                        'grp_id' => new external_value(PARAM_INT, 'Id do grupo no harpia', VALUE_DEFAULT, null),
+                        'pes_id' => new external_value(PARAM_INT, 'Id da pessoa no harpia'),
+                        'itt_id' => new external_value(PARAM_INT, 'Id da instituicao no harpia', VALUE_OPTIONAL, null),
                         'firstname' => new external_value(PARAM_TEXT, 'Primeiro nome do student'),
                         'lastname' => new external_value(PARAM_TEXT, 'Ultimo nome do student'),
                         'email' => new external_value(PARAM_TEXT, 'Email do student'),
