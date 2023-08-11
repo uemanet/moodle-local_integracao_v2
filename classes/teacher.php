@@ -113,7 +113,7 @@ class local_wsintegracao_v2_teacher extends wsintegracao_v2_base
                                 'email' => new external_value(PARAM_TEXT, 'Email do professor'),
                                 'username' => new external_value(PARAM_TEXT, 'Usuario de acesso do professor'),
                                 'password' => new external_value(PARAM_TEXT, 'Senha do professor'),
-                                'city' => new external_value(PARAM_TEXT, 'Cidade do tutor')
+                                'city' => new external_value(PARAM_TEXT, 'Cidade do tutor', VALUE_OPTIONAL, null)
                             )
                         )
                     )

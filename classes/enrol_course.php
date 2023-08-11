@@ -116,7 +116,7 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
                         'email' => new external_value(PARAM_TEXT, 'Email do student'),
                         'username' => new external_value(PARAM_TEXT, 'Usuario de acesso do student'),
                         'password' => new external_value(PARAM_TEXT, 'Senha do student'),
-                        'city' => new external_value(PARAM_TEXT, 'Cidade do student')
+                        'city' => new external_value(PARAM_TEXT, 'Cidade do student', VALUE_OPTIONAL, null)
                     )
                 )
             )
