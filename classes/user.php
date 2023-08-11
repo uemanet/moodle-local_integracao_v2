@@ -81,7 +81,7 @@ class local_wsintegracao_v2_user extends wsintegracao_v2_base {
                         'lastname' => new external_value(PARAM_TEXT, 'Ultimo nome do usuário'),
                         'email' => new external_value(PARAM_TEXT, 'Email do usuário'),
                         'username' => new external_value(PARAM_TEXT, 'Usuario de acesso do usuário'),
-                        'city' => new external_value(PARAM_TEXT, 'Cidade do usuário')
+                        'city' => new external_value(PARAM_TEXT, 'Cidade do usuário', VALUE_OPTIONAL, null)
                     )
                 )
             )

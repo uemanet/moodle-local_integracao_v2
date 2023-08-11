@@ -124,7 +124,7 @@ class local_wsintegracao_v2_tutor extends wsintegracao_v2_base
                         'email' => new external_value(PARAM_TEXT, 'Email do tutor'),
                         'username' => new external_value(PARAM_TEXT, 'Usuario de acesso do tutor'),
                         'password' => new external_value(PARAM_TEXT, 'Senha do tutor'),
-                        'city' => new external_value(PARAM_TEXT, 'Cidade do tutor')
+                        'city' => new external_value(PARAM_TEXT, 'Cidade do tutor', VALUE_OPTIONAL, null)
                     )
                 )
             )
