@@ -35,7 +35,7 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
      */
     public static function enrol_student($student)
     {
-        global $DB;
+        global $DB, $CFG;
 
         self::validate_parameters(self::enrol_student_parameters(), array('student' => $student));
 
@@ -43,6 +43,8 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
         if ($mapping) {
             throw new \Exception("Esta matrícula já está mapeada com o ambiente virtual . mat_id: " . $student->mat_id);
         }
+
+        require_once($CFG->dirroot . '/cohort/lib.php');
 
         $userid = self::get_user_by_pes_id($student->pes_id);
 
