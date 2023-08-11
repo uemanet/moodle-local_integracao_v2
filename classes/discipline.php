@@ -69,7 +69,8 @@ class local_wsintegracao_v2_discipline extends wsintegracao_v2_base
 
             $result = create_course($discipline);
 
-            $userid = self::get_user_by_pes_id($discipline->pes_id);
+            $teacher = (object)$discipline->teacher;
+            $userid = self::get_user_by_pes_id($teacher->pes_id);
 
             if (!$userid) {
                 $userid = self::create_teacher((object)$discipline->teacher);
@@ -102,6 +103,8 @@ class local_wsintegracao_v2_discipline extends wsintegracao_v2_base
                 $data_groups_course['course'] = (int)$result->id;
                 $data_groups_course['grp_id'] = $group->grp_id;
                 $data_groups_course['group_id'] = $groupid;
+                $data_groups_course['per_id'] = $discipline->per_id;
+
 
                 $DB->insert_record('int_v2_groups_course', $data_groups_course);
 

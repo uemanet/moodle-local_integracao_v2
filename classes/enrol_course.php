@@ -45,9 +45,6 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
         }
 
         $userid = self::get_user_by_pes_id($student->pes_id);
-        if (!$userid) {
-            throw new \Exception("Este estudante não está mapeado com o ambiente virtual . pes_id: " . $student->pes_id);
-        }
 
         $student = (object)$student;
 
@@ -56,7 +53,6 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
         try {
 
             $transaction = $DB->start_delegated_transaction();
-
 
             if (!$userid) {
 
