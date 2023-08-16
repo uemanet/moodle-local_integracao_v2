@@ -141,6 +141,25 @@ class wsintegracao_v2_base extends external_api
     }
 
     /**
+     * @param $tipo
+     * @return int
+     */
+    protected static function get_config_role($tipo) {
+        $config = get_config('local_integracao_v2');
+
+        switch ($tipo) {
+            case 'presencial':
+                return $config->tutor_presencial;
+            case 'distancia':
+                return $config->tutor_distancia;
+            case 'orientador':
+                return $config->orientador;
+            default:
+                return null;
+        }
+    }
+
+    /**
      * @param $userid
      * @param $senha
      * @throws dml_exception

@@ -96,4 +96,9 @@ if ($hassiteconfig) {
         new admin_setting_configselect('local_integracao_v2/tutor_distancia', 'Tutor à Distância',
             '', '1', $papeis)
     );
+
+    $settings->add(
+        new admin_setting_configselect('local_integracao_v2/orientador', 'Orientador',
+            '', '1', $papeis)
+    );
 }

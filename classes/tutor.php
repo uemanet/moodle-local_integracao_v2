@@ -78,12 +78,8 @@ class local_wsintegracao_v2_tutor extends wsintegracao_v2_base
             require_once("{$CFG->dirroot}/group/lib.php");
 
             foreach ($groups_courses as $group) {
-
-                if ($tutor->ttg_tipo_tutoria == "presencial") {
-                    self::enrol_user_in_moodle_course($user, $group->course, $tutorpresencialrole);
-                } else {
-                    self::enrol_user_in_moodle_course($user, $group->course, $tutordistanciarole);
-                }
+                $role = self::get_config_role($tutor->ttg_tipo_tutoria);
+                self::enrol_user_in_moodle_course($user, $group->course, $role);
 
                 $res = groups_add_member($group->group_id, $user);
             }
@@ -189,7 +185,7 @@ class local_wsintegracao_v2_tutor extends wsintegracao_v2_base
 
                 groups_remove_member($group_course->group_id, $tutorgroup->userid);
 
-                self::unenrol_user_in_moodle_course($group_course->userid, $group_course->course);
+                self::unenrol_user_in_moodle_course($tutorgroup->userid, $group_course->course);
 
             }
 
