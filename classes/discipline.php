@@ -54,6 +54,7 @@ class local_wsintegracao_v2_discipline extends wsintegracao_v2_base
         $teacherrole = get_config('local_integracao_v2')->professor;
         $tutorpresencialrole = get_config('local_integracao_v2')->tutor_presencial;
         $tutordistanciarole = get_config('local_integracao_v2')->tutor_distancia;
+        $orientadorrole = get_config('local_integracao_v2')->orientador;
 
         $returndata = [];
 
@@ -90,12 +91,9 @@ class local_wsintegracao_v2_discipline extends wsintegracao_v2_base
                 foreach ($groups_members as $groups_member) {
 
                     $user = self::get_user_by_pes_id($groups_member->pes_id);
+                    $role = self::get_config_role($groups_member->ttg_tipo_tutoria);
+                    self::enrol_user_in_moodle_course($user, $result->id, $role);
 
-                    if ($groups_member->ttg_tipo_tutoria == "presencial") {
-                        self::enrol_user_in_moodle_course($user, $result->id, $tutorpresencialrole);
-                    } else {
-                        self::enrol_user_in_moodle_course($user, $result->id, $tutordistanciarole);
-                    }
                     $res = groups_add_member($groupid, $user);
 
                 }
