@@ -50,11 +50,6 @@ class local_wsintegracao_v2_teacher extends wsintegracao_v2_base
             throw new \Exception('Essa disciplina não está mapeada no moodle. ofd_id: ' . $discipline->ofd_id);
         }
 
-        $userid = self::get_user_by_pes_id($discipline->pes_id);
-        if (!$userid) {
-            throw new \Exception("Este professor não está mapeado com o ambiente virtual . pes_id: " . $discipline->pes_id);
-        }
-
         try {
             $transaction = $DB->start_delegated_transaction();
 
