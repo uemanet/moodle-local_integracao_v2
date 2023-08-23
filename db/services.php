@@ -184,7 +184,21 @@ $functions = array(
         'classpath' => 'local/integracao_v2/classes/ping.php',
         'description' => 'Ping function',
         'type' => 'read'
-    )
+    ),
+    'local_integracao_v2_get_user' => array(
+        'classname' => 'local_wsintegracao_v2_user',
+        'methodname' => 'get_user',
+        'classpath' => 'local/integracao_v2/classes/user.php',
+        'description' => 'Get a user',
+        'type' => 'read'
+    ),
+    'local_integracao_v2_map_user' => array(
+        'classname' => 'local_wsintegracao_v2_user',
+        'methodname' => 'map_user',
+        'classpath' => 'local/integracao_v2/classes/user.php',
+        'description' => 'Map a user',
+        'type' => 'write'
+    ),
 );
 
 $services = array(
@@ -212,7 +226,9 @@ $services = array(
             'local_integracao_v2_get_grades_batch',
             'local_integracao_v2_get_course_grades_batch',
             'local_integracao_v2_update_user',
-            'local_integracao_v2_ping'
+            'local_integracao_v2_ping',
+            'local_integracao_v2_map_user',
+            'local_integracao_v2_get_user',
         ),
         'restrictedusers' => 0,
         'enabled' => 1
