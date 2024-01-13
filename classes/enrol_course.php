@@ -74,16 +74,6 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
 
             $res = $DB->insert_record('int_v2_student_class', $data);
 
-            if (isset($student->itt_id)) {
-                $cohort = $DB->get_record('cohort', ['idnumber' => $student->itt_id]);
-
-                if (!$cohort) {
-                    throw new \Exception("Não existe um cohort com idnumber criado para esta instituicao de id: " . $student->itt_id);
-                }
-
-                cohort_add_member($cohort->id, $userid);
-            }
-
             $returndata['id'] = $res;
             $returndata['status'] = 'success';
             $returndata['message'] = 'Aluno mapeado ao curso com sucesso';
@@ -112,7 +102,6 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
                         'trm_id' => new external_value(PARAM_INT, 'Id da turma do aluno no harpia'),
                         'grp_id' => new external_value(PARAM_INT, 'Id do grupo no harpia', VALUE_DEFAULT, null),
                         'pes_id' => new external_value(PARAM_INT, 'Id da pessoa no harpia'),
-                        'itt_id' => new external_value(PARAM_TEXT, 'Sigla da instituicao no harpia', VALUE_OPTIONAL, null),
                         'firstname' => new external_value(PARAM_TEXT, 'Primeiro nome do student'),
                         'lastname' => new external_value(PARAM_TEXT, 'Ultimo nome do student'),
                         'email' => new external_value(PARAM_TEXT, 'Email do student'),
