@@ -50,22 +50,25 @@ class local_wsintegracao_v2_student extends wsintegracao_v2_base
 
             require_once("{$CFG->dirroot}/group/lib.php");
 
-            $studentclass = $DB->get_record('int_v2_student_class', array('grp_id' => $student->old_grp_id, 'pes_id' => $student->pes_id), '*');
+            $studentclass = $DB->get_record('int_v2_student_class',
+                array(
+                    'trm_id' => $student->trm_id,
+                    'pes_id' => $student->pes_id),
+                '*'
+                );
 
-            $groups_courses = $DB->get_records('int_v2_groups_course', array('grp_id' => $student->old_grp_id));
+            if($studentclass->grp_id){
+                $groups_courses = $DB->get_records('int_v2_groups_course', array('grp_id' => $studentclass->grp_id));
+                foreach ($groups_courses as $group_course) {
+                    groups_remove_member($group_course->group_id, $studentclass->userid);
 
-            foreach ($groups_courses as $group_course) {
-
-                groups_remove_member($group_course->group_id, $studentclass->userid);
-
+                }
             }
 
             $groups_courses_new = $DB->get_records('int_v2_groups_course', array('grp_id' => $student->new_grp_id));
 
             foreach ($groups_courses_new as $group_course_new) {
-
                 groups_add_member($group_course_new->group_id, $studentclass->userid);
-
             }
 
             $studentclass->grp_id = $student->new_grp_id;
@@ -98,7 +101,7 @@ class local_wsintegracao_v2_student extends wsintegracao_v2_base
                     array(
                         'mat_id' => new external_value(PARAM_INT, 'Id da matrícula da pessoa do gestor'),
                         'pes_id' => new external_value(PARAM_INT, 'Id da pessoa do gestor'),
-                        'old_grp_id' => new external_value(PARAM_INT, 'Id do antigo grupo no gestor', VALUE_DEFAULT, null),
+                        'trm_id' => new external_value(PARAM_INT, 'Id da turma do gestor'),
                         'new_grp_id' => new external_value(PARAM_INT, 'Id do novo grupo no gestor')
                     )
                 )
