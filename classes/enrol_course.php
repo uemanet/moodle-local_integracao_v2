@@ -46,25 +46,26 @@ class local_wsintegracao_v2_enrol_course extends wsintegracao_v2_base
 
         require_once($CFG->dirroot . '/cohort/lib.php');
 
-        $userid = self::get_user_by_pes_id($student->pes_id);
-
         $student = (object)$student;
 
+        $userid = self::get_user_by_pes_id($student->pes_id);
+
+        if (!$userid) {
+
+            $userid = self::save_user($student);
+
+            $data['pes_id'] = $student->pes_id;
+            $data['userid'] = $userid;
+
+            $DB->insert_record('int_pessoa_user', $data);
+        }
+
         $returndata = [];
+        $transaction = null;
 
         try {
 
             $transaction = $DB->start_delegated_transaction();
-
-            if (!$userid) {
-
-                $userid = self::save_user($student);
-
-                $data['pes_id'] = $student->pes_id;
-                $data['userid'] = $userid;
-
-                $DB->insert_record('int_pessoa_user', $data);
-            }
 
             $data['mat_id'] = $student->mat_id;
             $data['userid'] = $userid;
