@@ -235,7 +235,7 @@ class local_wsintegracao_v2_student extends wsintegracao_v2_base
             throw new \Exception("Esta matrícula não está vinculada com o ambiente virtual . mat_id: " . $student->mat_id);
         }
 
-        $enrol_disciplines = $DB->get_record('int_v2_student_discipline', array('mat_id' => $student->mat_id));
+        $enrol_disciplines = $DB->get_records('int_v2_student_discipline', array('mat_id' => $student->mat_id));
 
         try {
 
